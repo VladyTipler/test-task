@@ -1,15 +1,12 @@
 <template>
-  <div>Test Component</div>
+    <div class="">
+<!-- footer -->
+    </div>
 </template>
 
 <script>
 export default {
-  name: 'Question',
-  data () {
-    return {
-
-    }
-  }
+  name: 'LayoutHeader'
 }
 </script>
 

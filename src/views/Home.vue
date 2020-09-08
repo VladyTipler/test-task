@@ -1,11 +1,8 @@
 <template>
-  <div class="home">
-    <ListQuestions/>
-  </div>
+  <ListQuestions/>
 </template>
 
 <script>
-// @ is an alias to /src
 import ListQuestions from '@/components/ListQuestions.vue'
 
 export default {

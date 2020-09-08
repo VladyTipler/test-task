@@ -1,12 +1,25 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <LayoutManager :layouts="$options.LAYOUTS" :current="$route.meta.layout"/>
   </div>
 </template>
+
+<script>
+import LayoutManager from '@/layouts/LayoutManager'
+import DefaultLayout from '@/layouts/DefaultLayout'
+
+const LAYOUTS = {
+  DefaultLayout
+}
+
+export default {
+  name: 'App',
+  components: {
+    LayoutManager
+  },
+  LAYOUTS
+}
+</script>
 
 <style lang="scss">
 

@@ -1,5 +1,3 @@
-import 'jquery'
-import 'popper.js'
 import 'bootstrap'
 import 'bootstrap/scss/bootstrap.scss'
 
@@ -9,6 +7,9 @@ import router from './router'
 import store from './store'
 
 Vue.config.productionTip = false
+
+// Шина
+export const emitter = new Vue()
 
 new Vue({
   router,

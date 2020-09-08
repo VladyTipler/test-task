@@ -8,29 +8,24 @@ const routes = [
   {
     path: '/',
     name: 'Home',
+    meta: { layout: 'DefaultLayout' },
     component: Home
   },
   {
-    path: '/questoins',
-    name: 'Questions',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Questions.vue')
-  },
-  {
     path: '/question/:id',
-    name: 'About',
+    name: 'Question',
+    meta: { layout: 'DefaultLayout' },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Question.vue')
+    component: () => import(/* webpackChunkName: "question" */ '../views/Question.vue')
   }
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
+  linkExactActiveClass: 'active',
   routes
 })
 
