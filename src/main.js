@@ -1,3 +1,8 @@
+import 'jquery'
+import 'popper.js'
+import 'bootstrap'
+import 'bootstrap/scss/bootstrap.scss'
+
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
