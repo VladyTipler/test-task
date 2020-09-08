@@ -1,3 +1,5 @@
+import Vue from 'vue'
+
 export default {
   state: () => ({
     questions: [],
@@ -6,29 +8,55 @@ export default {
   }),
   mutations: {
     setQuestions (state, questions) {
-      const size = state.questionsPerPage
-      // let pagedQuestions = []
-      for (let i = 0; i < Math.ceil(questions.length / state.questionsPerPage); i++) {
-        state.questions[i] = questions.slice((i * size), (i * size) + size)
-      }
-      const length = state.questions.length
-      state.questions.splice(length)
+      state.questions = questions
+    },
+    setAnswersToQuestion (state, { id, data }) {
+      const qIndex = state.questions.findIndex((el, i, array) => el.id === parseInt(id))
+      const questionEl = state.questions[qIndex]
+      questionEl.answers = data
+      Vue.set(state.questions, qIndex, questionEl)
     }
   },
   actions: {
-    loadQuestionsList ({ commit, state }) {
-      fetch('https://jsonplaceholder.typicode.com/posts')
+    async loadQuestionsList ({ commit, state }) {
+      if (state.questions.length > 0) {
+        return
+      }
+      state.loaded = false
+      await fetch('https://jsonplaceholder.typicode.com/posts')
         .then((res) => res.json())
         .then((data) => {
           commit('setQuestions', data)
           state.loaded = true
         })
+    },
+    async loadAnswersForQuestion ({ commit, getters, state }, id) {
+      console.log(getters.getQuestionById(id).answers)
+      if (getters.getQuestionById(id).answers) {
+        return
+      }
+      state.loaded = false
+      await fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`)
+        .then((res) => res.json())
+        .then((data) => {
+          commit('setAnswersToQuestion', {
+            id,
+            data
+          })
+        })
     }
   },
   getters: {
     getQuestions (state) {
-      return state.questions
+      const size = state.questionsPerPage
+      const pagedQuestions = []
+      for (let i = 0; i < Math.ceil(state.questions.length / state.questionsPerPage); i++) {
+        pagedQuestions[i] = state.questions.slice((i * size), (i * size) + size)
+      }
+      return pagedQuestions
+    },
+    getQuestionById: (state) => (id) => {
+      return state.questions.filter((el) => el.id === parseInt(id))[0] || []
     }
-
   }
 }

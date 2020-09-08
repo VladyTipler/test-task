@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="$store.state.ListQuestions.loaded">
+  <div class="container">
     <div class="row">
       <div class="col">
 
@@ -16,8 +16,9 @@
               <router-link
                 tag="button"
                 type="button"
-                :to="'/question/' + question"
-                class="btn btn-primary">Посмотреть вопрос</router-link>
+                :to="'/question/' + question.id"
+                class="btn btn-primary">Посмотреть вопрос
+              </router-link>
               <button type="button" class="btn btn-secondary">Редактировать</button>
               <button type="button" class="btn btn-danger">Удалить</button>
             </div>
@@ -66,13 +67,9 @@ export default {
       return this.$route.params.page || 1
     }
   },
-  methods: {
-    getQuestionsList () {
-      this.$store.dispatch('loadQuestionsList')
-    }
-  },
-  created () {
-    this.getQuestionsList()
+  methods: {},
+  mounted () {
+    this.$store.dispatch('loadQuestionsList')
   }
 }
 </script>
