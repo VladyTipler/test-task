@@ -1,29 +1,41 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="$store.state.ListQuestions.loaded">
     <div class="row">
       <div class="col">
 
-        <div v-for="card in 5" :key="card" class="card mb-3">
+        <h1 class="display-5 text-center">Список вопросов</h1>
+
+        <div v-for="question in questions[questionsPerPage]"
+             :key="question.id ? question.id : Math.random()"
+             class="card mb-3">
           <div class="card-body">
-            <h5 class="card-title">Вопрос #{{ card }}</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <p class="card-text">Тестовый стор: {{ test }}</p>
-            <router-link
-              tag="a"
-              class="btn btn-primary"
-              :to="'/question/' + card">
-              Посмотреть вопрос
-            </router-link>
+            <h5 class="card-title">{{ question.title }}</h5>
+            <p class="card-text">{{ question.body }}</p>
+
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <router-link
+                tag="button"
+                type="button"
+                :to="'/question/' + question"
+                class="btn btn-primary">Посмотреть вопрос</router-link>
+              <button type="button" class="btn btn-secondary">Редактировать</button>
+              <button type="button" class="btn btn-danger">Удалить</button>
+            </div>
           </div>
         </div>
 
         <nav aria-label="...">
           <ul class="pagination pagination-lg justify-content-center">
-            <li class="page-item disabled">
-              <a class="page-link" href="#" tabindex="-1">1</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <router-link
+              tag="li"
+              v-for="page in pages"
+              :key="page"
+              :to="'/page/' + page"
+              active-class="active"
+              :class="(page === currentPage) ? 'active' : ''"
+              class="page-item">
+              <a class="page-link" href="#">{{page}}</a>
+            </router-link>
           </ul>
         </nav>
       </div>
@@ -36,12 +48,31 @@
 export default {
   name: 'ListQuestions',
   data () {
-    return {}
+    return {
+      loaded: false
+    }
   },
   computed: {
-    test () {
-      return this.$store.state.ListQuestions.test
+    questions () {
+      return this.$store.getters.getQuestions
+    },
+    questionsPerPage () {
+      return this.currentPage - 1
+    },
+    pages () {
+      return this.questions.length
+    },
+    currentPage () {
+      return this.$route.params.page || 1
     }
+  },
+  methods: {
+    getQuestionsList () {
+      this.$store.dispatch('loadQuestionsList')
+    }
+  },
+  created () {
+    this.getQuestionsList()
   }
 }
 </script>

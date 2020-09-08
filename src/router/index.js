@@ -9,7 +9,14 @@ const routes = [
     path: '/',
     name: 'Home',
     meta: { layout: 'DefaultLayout' },
-    component: Home
+    component: Home,
+    children: [
+      {
+        path: 'page/:page',
+        meta: { layout: 'DefaultLayout' },
+        component: Home
+      }
+    ]
   },
   {
     path: '/question/:id',
