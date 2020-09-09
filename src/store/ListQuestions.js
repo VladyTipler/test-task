@@ -13,6 +13,11 @@ export default {
     setAnswersToQuestion (state, { id, data }) {
       const qIndex = state.questions.findIndex((el, i, array) => el.id === parseInt(id))
       const questionEl = state.questions[qIndex]
+
+      // Забить рандомными true/false правильность ответов
+      for (let i = 0; i < data.length; i++) {
+        data[i].isCorrect = Math.random() >= 0.5
+      }
       questionEl.answers = data
       Vue.set(state.questions, qIndex, questionEl)
     }
@@ -43,6 +48,7 @@ export default {
             id,
             data
           })
+          state.loaded = true
         })
     }
   },
