@@ -4,7 +4,8 @@
       <div class="col">
 
         <h1 class="display-5 text-center">Список вопросов</h1>
-
+        <button type="button" class="btn btn-info mt-3 mb-3"
+                @click.prevent="openQuestionAddModal">Добавить вопрос</button>
         <div v-for="question in questions[questionsPerPage]"
              :key="question.id ? question.id : Math.random()"
              class="card mb-3">
@@ -19,8 +20,10 @@
                 :to="'/question/' + question.id"
                 class="btn btn-primary">Посмотреть вопрос
               </router-link>
-              <button type="button" class="btn btn-secondary">Редактировать</button>
-              <button type="button" class="btn btn-danger">Удалить</button>
+              <button type="button" class="btn btn-secondary"
+                      @click.prevent="openQuestionEditModal(question)">Редактировать</button>
+              <button type="button" class="btn btn-danger"
+                      @click.prevent="openQuestionDeleteModal(question.id)">Удалить</button>
             </div>
           </div>
         </div>
@@ -45,6 +48,7 @@
 </template>
 
 <script>
+import { emitter } from '@/main'
 
 export default {
   name: 'ListQuestions',
@@ -67,7 +71,17 @@ export default {
       return this.$route.params.page || 1
     }
   },
-  methods: {},
+  methods: {
+    openQuestionEditModal (question) {
+      emitter.$emit('editQuestionOpen', question)
+    },
+    openQuestionAddModal () {
+      emitter.$emit('addQuestionOpen')
+    },
+    openQuestionDeleteModal (id) {
+      emitter.$emit('confirmQuestionOpen', id)
+    }
+  },
   mounted () {
     this.$store.dispatch('loadQuestionsList')
   }

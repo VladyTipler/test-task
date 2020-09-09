@@ -2,17 +2,21 @@
   <QuestionDetail
     :title="questionData.title"
     :answers="questionData.answers"
-    :body="questionData.body"/>
+    :body="questionData.body"
+    :id="questionData.id"
+    :key="key"/>
 </template>
 
 <script>
 import QuestionDetail from '@/components/QuestionDetail'
+import { emitter } from '@/main'
 
 export default {
   name: 'Question',
   data () {
     return {
-      qId: this.$route.params.id
+      qId: this.$route.params.id,
+      key: Math.ceil(Math.random() * Date.now())
     }
   },
   computed: {
@@ -24,8 +28,13 @@ export default {
     QuestionDetail
   },
   mounted () {
+    emitter.$on('questionUpdate', () => {
+      this.key = Math.ceil(Math.random() * Date.now())
+    })
     this.$store.dispatch('loadQuestionsList')
-    this.$store.dispatch('loadAnswersForQuestion', this.qId)
+      .then(() => {
+        this.$store.dispatch('loadAnswersForQuestion', this.qId)
+      })
   }
 }
 </script>

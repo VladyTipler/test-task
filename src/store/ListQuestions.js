@@ -20,15 +20,50 @@ export default {
       }
       questionEl.answers = data
       Vue.set(state.questions, qIndex, questionEl)
+    },
+    updateQuestion (state, payload) {
+      const qIndex = state.questions.findIndex((el, i, array) => el.id === parseInt(payload.id))
+      const questionEl = { ...state.questions[qIndex], ...payload }
+      Vue.set(state.questions, qIndex, questionEl)
+    },
+    deleteQuestion (state, id) {
+      state.questions = state.questions.filter((el) => el.id !== parseInt(id))
+    },
+    addQuestion (state, payload) {
+      const newAr = state.questions
+      newAr.unshift(payload)
+      state.questions = newAr
+    },
+    addAnswerToQuestion (state, payload) {
+      const qIndex = state.questions.findIndex((el, i, array) => el.id === parseInt(payload.qId))
+      const questionEl = state.questions[qIndex]
+      questionEl.answers.push(payload.answer)
+      Vue.set(state.questions, qIndex, questionEl)
     }
   },
   actions: {
+    updateQuestion ({ commit, state }, payload) {
+      // допустим тут ajax к базе
+      commit('updateQuestion', payload)
+    },
+    deleteQuestion ({ commit, state }, id) {
+      // допустим тут ajax к базе
+      commit('deleteQuestion', id)
+    },
+    addQuestion ({ commit, state }, payload) {
+      // допустим тут ajax к базе
+      commit('addQuestion', payload)
+    },
+    addAnswerToQuestion ({ commit, state }, payload) {
+      // допустим тут ajax к базе
+      commit('addAnswerToQuestion', payload)
+    },
     async loadQuestionsList ({ commit, state }) {
       if (state.questions.length > 0) {
         return
       }
       state.loaded = false
-      await fetch('https://jsonplaceholder.typicode.com/posts')
+      return await fetch('https://jsonplaceholder.typicode.com/posts')
         .then((res) => res.json())
         .then((data) => {
           commit('setQuestions', data)
@@ -36,7 +71,6 @@ export default {
         })
     },
     async loadAnswersForQuestion ({ commit, getters, state }, id) {
-      console.log(getters.getQuestionById(id).answers)
       if (getters.getQuestionById(id).answers) {
         return
       }
@@ -44,6 +78,7 @@ export default {
       await fetch(`https://jsonplaceholder.typicode.com/posts/${id}/comments`)
         .then((res) => res.json())
         .then((data) => {
+          data = (data.length) ? data : []
           commit('setAnswersToQuestion', {
             id,
             data

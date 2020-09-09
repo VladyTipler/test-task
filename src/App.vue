@@ -20,11 +20,6 @@ const LAYOUTS = {
 export default {
   name: 'App',
   computed: {
-    status () {
-      const status = (this.$store.state.ListQuestions.loaded) ? 'Loading...' : 'Success loading!'
-      console.log(status)
-      return status
-    },
     isLoaded () {
       return this.$store.state.ListQuestions.loaded
     }
